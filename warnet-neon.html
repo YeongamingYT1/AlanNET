@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON GRID Gaming Center</title>
+<style>
+/* ===== THEME TOKENS ===== */
+:root{--bg:#0a0a0f;--bg2:#12121c;--panel:#161624;--cyan:#00f0ff;--mag:#ff2bd6;--vio:#8a2bff;--txt:#e8e8f5;--mut:#8b8ba8;--ok:#27ff9a;--bad:#ff3860;
+--rgb:linear-gradient(90deg,var(--cyan),var(--vio),var(--mag),var(--cyan));--font:"Segoe UI",Roboto,system-ui,sans-serif;--disp:"Orbitron","Eurostile","Arial Black",Impact,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(900px 500px at 15% -10%,#1b0f3a,transparent),radial-gradient(800px 500px at 100% 10%,#0b2a3a,transparent),var(--bg);color:var(--txt);font-family:var(--font);line-height:1.55;min-height:100vh}
+h1,h2,h3{font-family:var(--disp);letter-spacing:.5px}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.glow-c{text-shadow:0 0 8px var(--cyan),0 0 22px var(--cyan)}
+.glow-m{text-shadow:0 0 8px var(--mag),0 0 22px var(--mag)}
+/* ===== NAV ===== */
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.88);backdrop-filter:blur(10px);border-bottom:1px solid #26264a}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--rgb);background-size:300% 100%;animation:flow 6s linear infinite}
+.nav{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:12px}
+.logo{font-family:var(--disp);font-weight:900;font-size:1.3rem;color:#fff;text-decoration:none}
+.logo b{color:var(--mag);text-shadow:0 0 12px var(--mag)}
+.menu{display:flex;gap:4px;flex-wrap:wrap}
+.menu a{color:var(--mut);text-decoration:none;padding:8px 13px;border-radius:8px;font-size:.92rem;transition:.25s}
+.menu a:hover,.menu a.active{color:#fff;background:#1e1e38;box-shadow:0 0 14px rgba(0,240,255,.45) inset,0 0 10px rgba(0,240,255,.3)}
+.burger{display:none;background:none;border:1px solid var(--cyan);color:var(--cyan);padding:6px 11px;border-radius:8px;font-size:1.2rem;cursor:pointer}
+@media(max-width:820px){.burger{display:block}.menu{display:none;position:absolute;top:100%;left:0;right:0;background:#0d0d18;flex-direction:column;padding:10px}.menu.open{display:flex}}
+/* ===== LAYOUT ===== */
+.page{display:none;max-width:1180px;margin:auto;padding:36px 18px 70px;animation:pg .4s ease}
+.page.active{display:block}
+@keyframes pg{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+@keyframes flow{to{background-position:300% 0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 6px var(--cyan),0 0 14px rgba(0,240,255,.25)}50%{box-shadow:0 0 12px var(--mag),0 0 30px rgba(255,43,214,.45)}}
+@keyframes blink{50%{opacity:0}}
+h2.t{font-size:clamp(1.5rem,4vw,2.2rem);margin-bottom:6px;color:#fff;text-shadow:0 0 14px var(--vio)}
+p.sub{color:var(--mut);margin-bottom:26px;max-width:62ch}
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+/* ===== CARD & BUTTON ===== */
+.card{position:relative;background:var(--panel);border:1px solid #2a2a50;border-radius:14px;padding:22px;transition:transform .3s,box-shadow .3s,border-color .3s;animation:pulse 5s ease-in-out infinite}
+.card:hover{transform:translateY(-6px);border-color:var(--cyan);box-shadow:0 0 28px rgba(0,240,255,.4)}
+.card.hot{border-color:var(--mag)}
+.btn{display:inline-block;border:0;cursor:pointer;color:#fff;font-weight:700;font-family:var(--font);padding:13px 26px;border-radius:10px;background:var(--rgb);background-size:300% 100%;animation:flow 5s linear infinite;box-shadow:0 0 18px rgba(138,43,255,.6);transition:transform .2s,box-shadow .2s;text-decoration:none;font-size:1rem}
+.btn:hover{transform:scale(1.05);box-shadow:0 0 30px var(--mag)}
+.btn.ghost{background:transparent;border:1px solid var(--cyan);color:var(--cyan);animation:none;box-shadow:none}
+.btn.ghost:hover{box-shadow:0 0 18px var(--cyan)}
+.btn.sm{padding:8px 14px;font-size:.85rem}
+.tag{display:inline-block;font-size:.75rem;padding:3px 10px;border-radius:99px;border:1px solid var(--mag);color:var(--mag)}
+/* ===== HOME ===== */
+.hero{text-align:center;padding:44px 0 30px}
+.hero h1{font-size:clamp(2rem,7vw,4.4rem);line-height:1.1;color:#fff;text-shadow:0 0 10px var(--cyan),0 0 30px var(--cyan),0 0 60px var(--vio)}
+.cursor{display:inline-block;width:.55ch;background:var(--mag);margin-left:4px;animation:blink 1s step-end infinite;box-shadow:0 0 12px var(--mag)}
+.hero p{color:var(--mut);max-width:60ch;margin:16px auto 24px;font-size:1.1rem}
+.timer{display:flex;gap:10px;justify-content:center;margin:0 0 26px}
+.timer div{background:var(--panel);border:1px solid var(--vio);border-radius:10px;padding:10px 14px;min-width:68px;box-shadow:0 0 14px rgba(138,43,255,.4)}
+.timer b{display:block;font-family:var(--disp);font-size:1.6rem;color:var(--cyan);text-shadow:0 0 10px var(--cyan)}
+.timer small{color:var(--mut)}
+.live{margin:34px 0}
+.bar{height:16px;background:#0d0d18;border-radius:99px;border:1px solid #2a2a50;overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:0;background:var(--rgb);background-size:300% 100%;animation:flow 4s linear infinite;box-shadow:0 0 16px var(--cyan);transition:width 1s}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);margin-right:6px;animation:blink 1.4s infinite}
+.feat .ic{font-size:2rem}
+.feat h3{margin:8px 0 4px;font-size:1.05rem;color:var(--cyan)}
+.feat p{color:var(--mut);font-size:.92rem}
+/* ===== RATES ===== */
+.price{font-family:var(--disp);font-size:1.9rem;color:var(--cyan);margin:6px 0}
+.price small{font-size:.8rem;color:var(--mut);font-family:var(--font)}
+.specs{list-style:none;margin:14px 0}
+.specs li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed #2a2a50;font-size:.9rem}
+.specs li span:first-child{color:var(--mut)}
+.night{background:#0d0d18;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:.9rem}
+/* ===== BOOKING ===== */
+.zone-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.zone-tabs button{background:var(--panel);border:1px solid #2a2a50;color:var(--txt);padding:9px 16px;border-radius:9px;cursor:pointer;transition:.25s}
+.zone-tabs button.on{border-color:var(--mag);box-shadow:0 0 16px var(--mag);color:#fff}
+.map{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:9px;background:#0d0d18;border:1px solid #2a2a50;border-radius:14px;padding:16px;margin-bottom:8px}
+.pc{aspect-ratio:1;border-radius:9px;border:1px solid var(--ok);background:#0f1f1a;color:var(--ok);cursor:pointer;font-weight:700;font-size:.8rem;transition:.2s}
+.pc:hover{transform:scale(1.12);box-shadow:0 0 14px var(--ok)}
+.pc.taken{border-color:var(--bad);color:var(--bad);background:#241018;cursor:not-allowed;opacity:.55}
+.pc.taken:hover{transform:none;box-shadow:none}
+.pc.sel{border-color:var(--cyan);color:#001;background:var(--cyan);box-shadow:0 0 18px var(--cyan)}
+.legend{font-size:.82rem;color:var(--mut);margin-bottom:22px}
+.legend b{display:inline-block;width:11px;height:11px;border-radius:3px;margin:0 4px 0 12px;vertical-align:middle}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:5px}
+input,select{width:100%;background:#0d0d18;border:1px solid #2a2a50;color:#fff;padding:11px 12px;border-radius:9px;font-size:1rem;font-family:var(--font);transition:.25s}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,240,255,.45);outline:0}
+.total{margin:20px 0;padding:18px;border-radius:12px;border:1px solid var(--vio);background:#0d0d18;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.total strong{font-family:var(--disp);font-size:1.7rem;color:var(--mag);text-shadow:0 0 12px var(--mag)}
+.acts{display:flex;gap:12px;flex-wrap:wrap}
+.err{color:var(--bad);font-size:.88rem;margin-top:10px;min-height:1.2em}
+.blist .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0;border-bottom:1px dashed #2a2a50;font-size:.92rem}
+/* ===== CAFE ===== */
+.food{padding:0;overflow:hidden}
+.food .ph{height:130px;display:grid;place-items:center;font-size:3.4rem;background:linear-gradient(135deg,#2b0f4a,#0a3a4a)}
+.food .bd{padding:16px}
+.food h3{font-size:1rem}
+.food p{color:var(--mut);font-size:.86rem;margin:4px 0 10px}
+.food .pr{color:var(--cyan);font-weight:700;margin-bottom:10px}
+.cartbar{position:sticky;bottom:12px;margin-top:24px;background:#0d0d18ee;border:1px solid var(--mag);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 0 20px rgba(255,43,214,.4)}
+/* ===== UPDATES ===== */
+.note{border-left:3px solid var(--cyan);padding:4px 0 4px 14px;margin-bottom:16px}
+.note small{color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{padding:10px 8px;text-align:left;border-bottom:1px dashed #2a2a50}
+th{color:var(--mut);font-weight:600}
+.rank1{color:#ffd23f;text-shadow:0 0 10px #ffd23f}
+/* ===== CONTACT ===== */
+iframe{width:100%;height:320px;border:0;border-radius:12px;filter:invert(90%) hue-rotate(180deg) saturate(.8)}
+details{background:var(--panel);border:1px solid #2a2a50;border-radius:10px;padding:12px 16px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;color:var(--cyan)}
+details p{color:var(--mut);margin-top:8px;font-size:.92rem}
+/* ===== MODAL & TOAST ===== */
+.modal{position:fixed;inset:0;background:rgba(3,3,8,.8);display:none;place-items:center;z-index:100;padding:18px}
+.modal.show{display:grid}
+.modal .box{max-width:420px;width:100%;background:var(--panel);border:1px solid var(--cyan);border-radius:16px;padding:26px;box-shadow:0 0 40px rgba(0,240,255,.5);animation:pg .3s}
+.modal h3{color:var(--ok);text-shadow:0 0 10px var(--ok);margin-bottom:12px}
+.modal .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #2a2a50;font-size:.92rem}
+#toast{position:fixed;right:16px;bottom:16px;z-index:120;background:var(--panel);border:1px solid var(--ok);color:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 0 20px rgba(39,255,154,.5);transform:translateY(120px);transition:.35s}
+#toast.show{transform:none}
+footer{text-align:center;color:var(--mut);padding:26px 18px;border-top:1px solid #1e1e38;font-size:.85rem}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ===== NAVIGASI ===== -->
+<header><div class="nav">
+  <a class="logo" href="#home">NEON<b>GRID</b></a>
+  <button class="burger" id="burger" aria-label="Menu">☰</button>
+  <nav class="menu" id="menu">
+    <a href="#home">Home</a><a href="#rates">Specs &amp; Rates</a><a href="#booking">Booking</a><a href="#cafe">Cafe</a><a href="#updates">Updates</a><a href="#contact">Contact</a>
+  </nav>
+</div></header>
+
+<!-- ===== HOME ===== -->
+<main>
+<section class="page" id="home">
+  <div class="hero">
+    <h1><span id="typed"></span><span class="cursor">&nbsp;</span></h1>
+    <p>Warnet gaming 24 jam dengan monitor 360Hz, GPU RTX, dan fiber 1 Gbps. Booking PC dari rumah, datang, langsung main.</p>
+    <div class="timer" id="timer"><div><b id="th">00</b><small>jam</small></div><div><b id="tm">00</b><small>menit</small></div><div><b id="ts">00</b><small>detik</small></div></div>
+    <p style="margin:-8px auto 22px;font-size:.95rem">Promo Begadang diskon 20% berakhir malam ini</p>
+    <a class="btn" href="#booking">Book PC Sekarang</a>
+  </div>
+
+  <div class="card live">
+    <h3><span class="dot"></span>Ketersediaan PC Live</h3>
+    <div class="bar"><i id="liveBar"></i></div>
+    <p><b class="glow-c" id="liveTxt" style="font-size:1.3rem"></b> <span style="color:var(--mut)">PC terpakai. Angka diperbarui otomatis.</span></p>
+  </div>
+
+  <div class="grid g4">
+    <div class="card feat"><div class="ic">🖥️</div><h3>Monitor 144Hz - 360Hz</h3><p>Panel IPS dan TN cepat, respons 1ms untuk FPS kompetitif.</p></div>
+    <div class="card feat"><div class="ic">🎮</div><h3>Seri RTX</h3><p>RTX 3060 sampai RTX 4080 Super, ray tracing tanpa lag.</p></div>
+    <div class="card feat"><div class="ic">💺</div><h3>Kursi Gaming Ergonomis</h3><p>Sandaran lumbar dan armrest 4D untuk sesi maraton.</p></div>
+    <div class="card feat"><div class="ic">⚡</div><h3>Fiber 1 Gbps</h3><p>Ping rendah ke server Asia Tenggara, download game cepat.</p></div>
+  </div>
+</section>
+
+<!-- ===== SPECS & RATES ===== -->
+<section class="page" id="rates">
+  <h2 class="t">Specs &amp; Rates</h2>
+  <p class="sub">Pilih tier sesuai kebutuhan. Paket Begadang berlaku 22.00 - 06.00 (8 jam).</p>
+  <div class="grid g3" id="tiers"></div>
+</section>
+
+<!-- ===== BOOKING ===== -->
+<section class="page" id="booking">
+  <h2 class="t">Online Booking</h2>
+  <p class="sub">Pilih zona, klik PC yang tersedia (hijau), lalu isi data pemesanan.</p>
+  <div class="zone-tabs" id="zoneTabs"></div>
+  <div class="map" id="pcMap"></div>
+  <div class="legend"><b style="background:var(--ok)"></b>Tersedia<b style="background:var(--bad)"></b>Terisi<b style="background:var(--cyan)"></b>Dipilih</div>
+
+  <div class="card" style="animation:none">
+    <div class="form">
+      <div><label for="fName">Nama</label><input id="fName" placeholder="Nama gamer"></div>
+      <div><label for="fWa">No. WhatsApp</label><input id="fWa" type="tel" placeholder="08xxxxxxxxxx"></div>
+      <div><label for="fPc">PC Terpilih</label><input id="fPc" readonly placeholder="Klik PC pada denah"></div>
+      <div><label for="fDate">Tanggal</label><input id="fDate" type="date"></div>
+      <div><label for="fTime">Jam Masuk</label><input id="fTime" type="time" value="19:00"></div>
+      <div><label for="fDur">Durasi / Paket</label>
+        <select id="fDur"><option value="1">1 jam</option><option value="2">2 jam</option><option value="3">3 jam</option><option value="5">5 jam</option><option value="night">Paket Begadang (8 jam)</option></select></div>
+      <div><label for="fPay">Metode Pembayaran</label>
+        <select id="fPay"><option>QRIS</option><option>E-Wallet</option><option>Cash di kasir</option></select></div>
+    </div>
+    <div class="total"><span>Total pembayaran<br><small id="calcInfo" style="color:var(--mut)">Belum dihitung</small></span><strong id="total">Rp 0</strong></div>
+    <div class="acts"><button class="btn ghost" id="btnCalc">Hitung Total</button><button class="btn" id="btnBook">Konfirmasi Booking</button></div>
+    <div class="err" id="err" role="alert"></div>
+  </div>
+
+  <h3 style="margin:34px 0 8px">Booking Saya</h3>
+  <div class="card blist" id="bookList" style="animation:none"></div>
+</section>
+
+<!-- ===== CAFE ===== -->
+<section class="page" id="cafe">
+  <h2 class="t">Gaming Cafe</h2>
+  <p class="sub">Pesan dari kursi, diantar ke meja. Tidak perlu pause game.</p>
+  <div class="grid g3" id="menuGrid"></div>
+  <div class="cartbar"><span id="cartInfo">Pesanan kosong</span><span><button class="btn ghost sm" id="cartClear">Kosongkan</button> <button class="btn sm" id="cartOrder">Kirim Pesanan</button></span></div>
+</section>
+
+<!-- ===== UPDATES ===== -->
+<section class="page" id="updates">
+  <h2 class="t">News &amp; Updates</h2>
+  <p class="sub">Patch notes sistem, jadwal turnamen, dan peringkat gamer bulan ini.</p>
+  <div class="grid g3">
+    <div class="card"><h3 style="color:var(--cyan);margin-bottom:14px">Patch Notes</h3>
+      <div class="note"><b>v2.4 - Driver &amp; Game Library</b><br><small>8 Okt 2026</small><br>Driver NVIDIA diperbarui, Valorant, CS2, dan Dota 2 sudah di-patch terbaru.</div>
+      <div class="note"><b>Maintenance Jaringan</b><br><small>Selasa, 02.00 - 03.00</small><br>Pergantian switch lantai 2. Koneksi bisa putus sekitar 10 menit.</div>
+      <div class="note"><b>Billing Baru</b><br><small>1 Okt 2026</small><br>Sisa saldo kini bisa dicek dari halaman ini lewat kasir.</div></div>
+    <div class="card hot"><h3 style="color:var(--mag);margin-bottom:14px">Turnamen &amp; Event</h3>
+      <div class="note" style="border-color:var(--mag)"><b>NEON CUP: Mobile Legends 5v5</b><br><small>Sabtu, 24 Okt 2026, 13.00</small><br>Registrasi Rp 100.000 per tim, ditutup 20 Okt. Bracket single elimination.</div>
+      <div class="note" style="border-color:var(--mag)"><b>Valorant Open Night</b><br><small>Sabtu, 7 Nov 2026, 19.00</small><br>Registrasi gratis untuk member. Hadiah total Rp 3.000.000.</div>
+      <span class="tag">Daftar di kasir atau WA admin</span></div>
+    <div class="card"><h3 style="color:var(--cyan);margin-bottom:14px">Leaderboard Billing</h3>
+      <table><thead><tr><th>#</th><th>Gamer</th><th>Jam</th></tr></thead><tbody id="lb"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="page" id="contact">
+  <h2 class="t">Contact &amp; Location</h2>
+  <p class="sub">Buka 24/7 setiap hari, termasuk hari libur nasional.</p>
+  <div class="grid g3" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div class="card" style="animation:none">
+      <h3 style="color:var(--cyan)">Alamat</h3>
+      <p style="margin:8px 0 14px">Jl. Contoh Raya No. 88, Jakarta Selatan 12345<br><small style="color:var(--mut)">Ganti dengan alamat warnet Anda.</small></p>
+      <h3 style="color:var(--cyan)">Jam Operasional</h3>
+      <p style="margin:8px 0 14px">24 jam, Senin - Minggu</p>
+      <h3 style="color:var(--cyan)">WhatsApp Admin</h3>
+      <p style="margin:8px 0 14px"><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">+62 812-3456-7890</a></p>
+      <iframe loading="lazy" title="Peta lokasi" src="https://maps.google.com/maps?q=Jakarta+Selatan&amp;output=embed"></iframe>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">FAQ</h3>
+      <details><summary>Apa saja aturan warnet?</summary><p>Dilarang merokok di dalam ruangan, dilarang merusak perangkat, dan wajib memakai headset pribadi atau yang disediakan kasir.</p></details>
+      <details><summary>Apakah ada parkir?</summary><p>Parkir motor dan mobil tersedia gratis untuk pelanggan, diawasi 24 jam.</p></details>
+      <details><summary>Bagaimana jika telat dari jam booking?</summary><p>PC ditahan 15 menit. Setelah itu booking dianggap batal dan PC dibuka untuk umum.</p></details>
+      <details><summary>Bisa bayar pakai apa?</summary><p>QRIS, e-wallet, dan tunai di kasir.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>© 2026 NEON GRID Gaming Center. Data booking disimpan di browser Anda (localStorage).</footer>
+
+<!-- ===== MODAL & TOAST ===== -->
+<div class="modal" id="modal"><div class="box" role="dialog" aria-modal="true"><h3>Booking Berhasil</h3><div id="modalBody"></div><p style="color:var(--mut);font-size:.85rem;margin:12px 0">Tunjukkan kode booking ke kasir saat tiba.</p><button class="btn" id="modalClose" style="width:100%">Tutup</button></div></div>
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== HELPERS ===== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rp=n=>"Rp "+n.toLocaleString("id-ID");
+const store={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)}
+
+/* ===== DATA ===== */
+const ZONES={
+ reg:{name:"Zona Reguler",pc:30,prefix:"R",rate:6000,night:35000,cpu:"Intel Core i5-12400F",gpu:"RTX 3060 12GB",ram:"16GB DDR4",mon:'24" 165Hz IPS'},
+ vip:{name:"Zona VIP",pc:14,prefix:"V",rate:9000,night:55000,cpu:"Intel Core i7-13700F",gpu:"RTX 4070 Super",ram:"32GB DDR5",mon:'27" 240Hz IPS'},
+ vvip:{name:"Streaming Room",pc:6,prefix:"S",rate:15000,night:90000,cpu:"Intel Core i9-14900K",gpu:"RTX 4080 Super",ram:"64GB DDR5",mon:'27" 360Hz OLED'}
+};
+const MENU=[
+ {id:1,n:"Mie Dok-dok Spesial",d:"Mie pedas level 1-5 dengan telur dan sosis.",p:18000,e:"🍜"},
+ {id:2,n:"Red Bull Mocktail",d:"Soda, lychee, dan lemon, segar dan manis.",p:22000,e:"🍹"},
+ {id:3,n:"Rice Bowl Chicken Teriyaki",d:"Nasi, ayam teriyaki, dan sayur.",p:25000,e:"🍚"},
+ {id:4,n:"Coffee Aren Latte",d:"Espresso, susu, dan gula aren.",p:20000,e:"☕"},
+ {id:5,n:"Snack Platter",d:"Kentang goreng, nugget, dan sosis, cukup untuk berdua.",p:30000,e:"🍟"},
+ {id:6,n:"Es Teh Jumbo",d:"Teh dingin 700ml, isi ulang gratis es.",p:8000,e:"🧋"}
+];
+const LB=[["xX_Rayhan_Xx",142],["ShadowMira",131],["NoScopeDito",119],["Kirana.GG",104],["BudiHeadshot",96]];
+
+/* ===== ROUTER (SPA) ===== */
+function route(){
+  const id=(location.hash||"#home").slice(1);
+  const ok=$$(".page").some(p=>p.id===id)?id:"home";
+  $$(".page").forEach(p=>p.classList.toggle("active",p.id===ok));
+  $$(".menu a").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+ok));
+  $("#menu").classList.remove("open");scrollTo(0,0);
+}
+addEventListener("hashchange",route);
+$("#burger").onclick=()=>$("#menu").classList.toggle("open");
+
+/* ===== HOME: typing, countdown, live counter ===== */
+(function(){const txt="LEVEL UP DI NEON GRID",el=$("#typed");let i=0;
+ (function tick(){el.textContent=txt.slice(0,i++);if(i<=txt.length)setTimeout(tick,80)})()})();
+function countdown(){const n=new Date(),e=new Date(n);e.setHours(23,59,59,999);let s=Math.max(0,Math.floor((e-n)/1000));
+ const p=x=>String(x).padStart(2,"0");$("#th").textContent=p(Math.floor(s/3600));$("#tm").textContent=p(Math.floor(s%3600/60));$("#ts").textContent=p(s%60)}
+setInterval(countdown,1000);countdown();
+const TOTAL=Object.values(ZONES).reduce((a,z)=>a+z.pc,0);let used=32;
+function live(){used=Math.min(TOTAL-2,Math.max(8,used+Math.floor(Math.random()*5)-2));
+ $("#liveTxt").textContent=used+"/"+TOTAL;$("#liveBar").style.width=(used/TOTAL*100)+"%"}
+setInterval(live,4000);live();
+
+/* ===== RATES ===== */
+$("#tiers").innerHTML=Object.entries(ZONES).map(([k,z],i)=>`
+ <div class="card ${k==="vip"?"hot":""}">${k==="vip"?'<span class="tag">Paling populer</span>':""}
+  <h3 style="margin-top:6px">${z.name}</h3>
+  <div class="price">${rp(z.rate)}<small> / jam</small></div>
+  <div class="night">Paket Begadang 8 jam: <b style="color:var(--mag)">${rp(z.night)}</b></div>
+  <ul class="specs"><li><span>CPU</span><span>${z.cpu}</span></li><li><span>GPU</span><span>${z.gpu}</span></li><li><span>RAM</span><span>${z.ram}</span></li><li><span>Monitor</span><span>${z.mon}</span></li></ul>
+  <button class="btn sm" data-zone="${k}" style="width:100%">Pilih tier ini</button></div>`).join("");
+$("#tiers").onclick=e=>{const k=e.target.dataset.zone;if(k){setZone(k);location.hash="#booking"}};
+
+/* ===== BOOKING ===== */
+let zone="reg",picked=null;
+const bookings=()=>store.get("ng_bookings",[]);
+function seed(str){let h=0;for(const c of str)h=(h*31+c.charCodeAt(0))>>>0;return h}
+function isTaken(id){ // simulasi PC terisi + PC yang sudah dibooking user pada tanggal & jam sama
+ const d=$("#fDate").value,t=$("#fTime").value;
+ if(bookings().some(b=>b.pc===id&&b.date===d&&b.time===t))return true;
+ return seed(id+d+t)%100<30}
+function setZone(k){zone=k;picked=null;$("#fPc").value="";renderZones();renderMap()}
+function renderZones(){$("#zoneTabs").innerHTML=Object.entries(ZONES).map(([k,z])=>`<button class="${k===zone?"on":""}" data-z="${k}">${z.name} (${rp(z.rate)}/jam)</button>`).join("")}
+$("#zoneTabs").onclick=e=>{if(e.target.dataset.z)setZone(e.target.dataset.z)};
+function renderMap(){const z=ZONES[zone];let h="";
+ for(let i=1;i<=z.pc;i++){const id=z.prefix+String(i).padStart(2,"0"),t=isTaken(id);
+  h+=`<button class="pc ${t?"taken":""} ${id===picked?"sel":""}" data-pc="${id}" ${t?"disabled":""} aria-label="PC ${id}">${id}</button>`}
+ $("#pcMap").innerHTML=h}
+$("#pcMap").onclick=e=>{const id=e.target.dataset.pc;if(!id)return;picked=id;$("#fPc").value=id+" ("+ZONES[zone].name+")";renderMap()};
+["fDate","fTime"].forEach(i=>$("#"+i).addEventListener("change",()=>{if(picked&&isTaken(picked)){picked=null;$("#fPc").value=""}renderMap()}));
+function calc(){const z=ZONES[zone],d=$("#fDur").value;
+ const t=d==="night"?z.night:z.rate*Number(d);
+ $("#total").textContent=rp(t);$("#calcInfo").textContent=z.name+" - "+(d==="night"?"Paket Begadang 8 jam":d+" jam");return t}
+$("#fDur").onchange=calc;$("#btnCalc").onclick=calc;
+const today=new Date();$("#fDate").min=$("#fDate").value=today.toISOString().slice(0,10);
+$("#btnBook").onclick=()=>{
+ const name=$("#fName").value.trim(),wa=$("#fWa").value.replace(/\D/g,""),err=$("#err");err.textContent="";
+ if(name.length<2)return err.textContent="Isi nama minimal 2 karakter.";
+ if(!/^(08|628)\d{8,12}$/.test(wa))return err.textContent="Nomor WhatsApp tidak valid. Contoh: 081234567890.";
+ if(!picked)return err.textContent="Pilih PC pada denah terlebih dahulu.";
+ if(!$("#fDate").value||!$("#fTime").value)return err.textContent="Tanggal dan jam masuk wajib diisi.";
+ const b={code:"NG-"+Date.now().toString(36).toUpperCase().slice(-6),name,wa,pc:picked,zone:ZONES[zone].name,date:$("#fDate").value,time:$("#fTime").value,
+  dur:$("#fDur").value==="night"?"Begadang 8 jam":$("#fDur").value+" jam",pay:$("#fPay").value,total:calc(),status:"Menunggu kedatangan"};
+ const all=bookings();all.push(b);store.set("ng_bookings",all);
+ $("#modalBody").innerHTML=[["Kode",b.code],["Nama",b.name],["PC",b.pc],["Jadwal",b.date+" "+b.time],["Durasi",b.dur],["Bayar via",b.pay],["Total",rp(b.total)]].map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
+ $("#modal").classList.add("show");picked=null;$("#fPc").value="";renderMap();renderBookings()};
+$("#modalClose").onclick=()=>$("#modal").classList.remove("show");
+addEventListener("keydown",e=>{if(e.key==="Escape")$("#modal").classList.remove("show")});
+function renderBookings(){const a=bookings();
+ $("#bookList").innerHTML=a.length?a.map(b=>`<div class="row"><span><b>${b.code}</b> - ${b.pc}, ${b.date} ${b.time}, ${b.dur}<br><small style="color:var(--mut)">${b.name} - ${b.status}</small></span><span><b style="color:var(--mag)">${rp(b.total)}</b> <button class="btn ghost sm" data-c="${b.code}">Batalkan</button></span></div>`).join("")
+  :'<p style="color:var(--mut)">Belum ada booking. Pilih PC di atas untuk memulai.</p>'}
+$("#bookList").onclick=e=>{const c=e.target.dataset.c;if(!c)return;store.set("ng_bookings",bookings().filter(b=>b.code!==c));renderBookings();renderMap();toast("Booking "+c+" dibatalkan")};
+
+/* ===== CAFE ===== */
+let cart=store.get("ng_cart",{});
+$("#menuGrid").innerHTML=MENU.map(m=>`<div class="card food"><div class="ph">${m.e}</div><div class="bd"><h3>${m.n}</h3><p>${m.d}</p><div class="pr">${rp(m.p)}</div><button class="btn sm" data-m="${m.id}">Tambah ke Pesanan</button></div></div>`).join("");
+function renderCart(){const items=Object.entries(cart),n=items.reduce((a,[,q])=>a+q,0),t=items.reduce((a,[id,q])=>a+MENU.find(m=>m.id==id).p*q,0);
+ $("#cartInfo").innerHTML=n?`<b>${n} item</b> - ${rp(t)}`:"Pesanan kosong";store.set("ng_cart",cart)}
+$("#menuGrid").onclick=e=>{const id=e.target.dataset.m;if(!id)return;cart[id]=(cart[id]||0)+1;renderCart();toast(MENU.find(m=>m.id==id).n+" ditambahkan")};
+$("#cartClear").onclick=()=>{cart={};renderCart()};
+$("#cartOrder").onclick=()=>{if(!Object.keys(cart).length)return toast("Pesanan masih kosong");cart={};renderCart();toast("Pesanan dikirim ke dapur. Estimasi 10-15 menit.")};
+
+/* ===== LEADERBOARD ===== */
+$("#lb").innerHTML=LB.map((r,i)=>`<tr><td class="${i?"":"rank1"}">${i+1}</td><td>${r[0]}</td><td>${r[1]} jam</td></tr>`).join("");
+
+/* ===== INIT ===== */
+renderZones();renderMap();renderBookings();renderCart();calc();route();
+</script>
+</body>
+</html>
